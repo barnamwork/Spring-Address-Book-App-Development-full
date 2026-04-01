@@ -25,15 +25,15 @@ public class AddressBookService {
     }
 
     public String create(AddressBookDTO dto) {
-        AddressBook obj = new AddressBook(counter++, dto.name, dto.city);
+        AddressBook obj = new AddressBook(counter++, dto.getName(), dto.getCity());
         list.add(obj);
         return "Created Successfully";
     }
 
     public String update(int id, AddressBookDTO dto) {
         AddressBook obj = getById(id);
-        obj.setName(dto.name);
-        obj.setCity(dto.city);
+        obj.setName(dto.getName());
+        obj.setCity(dto.getCity());
         return "Updated Successfully";
     }
 
