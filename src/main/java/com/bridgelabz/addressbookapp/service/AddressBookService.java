@@ -11,39 +11,35 @@ import java.util.List;
 public class AddressBookService {
 
     private List<AddressBook> list = new ArrayList<>();
+    private int counter = 1;
 
     public List<AddressBook> getAll() {
         return list;
     }
 
     public AddressBook getById(int id) {
-        if (id < 0 || id >= list.size()) {
-            throw new RuntimeException("Invalid ID");
-        }
-        return list.get(id);
+        return list.stream()
+                .filter(obj -> obj.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Address not found"));
     }
 
     public String create(AddressBookDTO dto) {
-        AddressBook obj = new AddressBook(list.size(), dto.name, dto.city);
+        AddressBook obj = new AddressBook(counter++, dto.name, dto.city);
         list.add(obj);
-        return "Created";
+        return "Created Successfully";
     }
 
     public String update(int id, AddressBookDTO dto) {
-        if (id < 0 || id >= list.size()) {
-            throw new RuntimeException("Invalid ID");
-        }
-        AddressBook obj = list.get(id);
+        AddressBook obj = getById(id);
         obj.setName(dto.name);
         obj.setCity(dto.city);
-        return "Updated";
+        return "Updated Successfully";
     }
 
     public String delete(int id) {
-        if (id < 0 || id >= list.size()) {
-            throw new RuntimeException("Invalid ID");
-        }
-        list.remove(id);
-        return "Deleted";
+        AddressBook obj = getById(id);
+        list.remove(obj);
+        return "Deleted Successfully";
     }
 }
