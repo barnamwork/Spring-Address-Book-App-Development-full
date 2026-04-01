@@ -1,45 +1,43 @@
 package com.bridgelabz.addressbookapp.controller;
 
+import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
+import com.bridgelabz.addressbookapp.model.AddressBook;
+import com.bridgelabz.addressbookapp.service.AddressBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/addressbook")
 public class AddressBookController {
 
-    private List<String> list = new ArrayList<>();
+    @Autowired
+    AddressBookService service;
 
     @GetMapping("/")
-    public ResponseEntity<List<String>> getAll() {
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<AddressBook>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable int id) {
-        if (id < 0 || id >= list.size()) {
-            return ResponseEntity.badRequest().body("Invalid ID");
-        }
-        return ResponseEntity.ok(list.get(id));
+    public ResponseEntity<AddressBook> getById(@PathVariable int id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> create(@RequestBody String name) {
-        list.add(name);
-        return ResponseEntity.ok("Added");
+    public ResponseEntity<String> create(@RequestBody AddressBookDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> update(@PathVariable int id, @RequestBody String name) {
-        list.set(id, name);
-        return ResponseEntity.ok("Updated");
+    public ResponseEntity<String> update(@PathVariable int id, @RequestBody AddressBookDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable int id) {
-        list.remove(id);
-        return ResponseEntity.ok("Deleted");
+        return ResponseEntity.ok(service.delete(id));
     }
 }
